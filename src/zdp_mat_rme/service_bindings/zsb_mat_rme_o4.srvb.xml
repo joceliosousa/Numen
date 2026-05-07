@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Service Binding: ZSB_MAT_RME_O4 -->
+<!-- Type: OData V4, Contract: C1 -->
+<!-- Service Definition: ZSD_MAT_RME_O4 -->
+<!-- Published: true -->
+<serviceBinding name="ZSB_MAT_RME_O4" type="ODATA" version="V4" contract="C1" published="true">
+  <serviceDefinition name="ZSD_MAT_RME_O4"/>
+</serviceBinding>

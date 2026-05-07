@@ -1,0 +1,125 @@
+@EndUserText.label : 'ZDPTMM015 - Material avião comprado RME (manutenção)'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table ztdp_matrmema {
+
+  @EndUserText.label : 'Mandante'
+  key client            : abap.clnt not null;
+  key matnr             : matnr not null;
+  @EndUserText.label : 'Número da ordem de modificação da RME'
+  key omrme             : abap.numc(6) not null;
+  bukrs                 : bukrs;
+  @EndUserText.label : 'Nº peça de fabricante'
+  mfrpn                 : abap.char(40);
+  @EndUserText.label : 'Nº peça de fabricante'
+  mfrpn_an              : abap.char(40);
+  owner                 : syuname;
+  @EndUserText.label : 'Código Parceiro do Desenho'
+  cod_pcr_des           : abap.numc(5);
+  @EndUserText.label : 'Código do Parceiro de Procedência'
+  cod_pcr_prcd          : abap.numc(5);
+  lifnr                 : lifnr;
+  @EndUserText.label : 'Denominação externa do fabricante'
+  emnfr                 : abap.char(10);
+  @EndUserText.label : 'Status no qual o material se encontra - workflow'
+  zmstae                : abap.char(2);
+  @EndUserText.label : 'Situação (status) no qual o material se encontra'
+  cod_sit_mat           : abap.char(1);
+  @EndUserText.label : 'Programa'
+  cod_proj_aenv         : abap.char(4);
+  @EndUserText.label : 'Descrição expandida em inglês'
+  dscexpen              : abap.char(65);
+  @EndUserText.label : 'Descrição resumida em Inglês'
+  dscresen              : abap.char(35);
+  @EndUserText.label : 'Descrição expandida em português'
+  dscexppt              : abap.char(65);
+  @EndUserText.label : 'Descrição resumida em português'
+  dscrespt              : abap.char(35);
+  @EndUserText.label : 'Grupo de mercadorias'
+  matkl                 : abap.char(9);
+  origem_material       : zorigem;
+  @EndUserText.label : 'Instrução de produção/de controle de qualidade'
+  ferth                 : abap.char(18);
+  @EndUserText.label : 'Denominação da norma (p.ex. DIN)'
+  normt                 : abap.char(18);
+  @EndUserText.label : 'RME - Capítulo'
+  num_cap_rme           : abap.char(2);
+  @EndUserText.label : 'RME - Subcapítulo'
+  num_sucp_rme          : abap.char(2);
+  @EndUserText.label : 'RME - Seção'
+  num_scao_rme          : abap.char(3);
+  @EndUserText.label : 'Indicador de Rastreabilidade'
+  ind_rastb             : abap.char(1);
+  @EndUserText.label : 'Código para administração em lote obrigatória'
+  xchpf                 : abap.char(1);
+  @EndUserText.label : 'Perfil de nºs série'
+  sernp                 : abap.char(4);
+  @EndUserText.label : 'Tamanho/dimensão'
+  groes                 : abap.char(32);
+  meins                 : meins;
+  @EndUserText.label : 'Unidade de medida de saída'
+  ausme                 : abap.unit(3);
+  @EndUserText.label : 'Peso líquido'
+  @Semantics.quantity.unitOfMeasure : 'ztdp_matrmema.meins'
+  vlr_pes_calc          : abap.quan(13,3);
+  @EndUserText.label : 'Peso líquido'
+  @Semantics.quantity.unitOfMeasure : 'ztdp_matrmema.meins'
+  ntgew                 : abap.quan(13,3);
+  @EndUserText.label : 'Grupo de Aprovação de Programa'
+  aprogrup              : abap.char(2);
+  @EndUserText.label : 'Perfil para código de mercadoria perigosa'
+  profl                 : abap.char(3);
+  @EndUserText.label : 'Condições de estocagem'
+  raube                 : abap.char(2);
+  @EndUserText.label : 'Prazo de validade'
+  mhdhb                 : abap.dec(4,0);
+  @EndUserText.label : 'Ciclos de Preservação'
+  qtd_cicl_prsv         : abap.numc(2);
+  @EndUserText.label : 'Tempo de Preservação'
+  qtd_tpo_prsv          : abap.numc(5);
+  @EndUserText.label : 'Tempo de Reteste'
+  zqtd_tpo_rtst         : abap.numc(5);
+  @EndUserText.label : 'Ciclos de Reteste'
+  qtd_cicl_rtst         : abap.numc(2);
+  anaresp               : syuname;
+  @EndUserText.label : 'Indicador do tipo de modificação'
+  tipmod                : abap.char(1);
+  approver              : syuname;
+  @EndUserText.label : 'Indicador Item Reponível'
+  ind_repn_item         : abap.char(1);
+  @EndUserText.label : 'Indicador se esta OMRME é a última (atual) ou não'
+  indomrme              : abap.char(1);
+  ind_tso               : abap_boolean;
+  @EndUserText.label : 'Category Part List'
+  cod_cpl               : abap.char(1);
+  @EndUserText.label : 'Código ONU'
+  cod_onu               : abap.char(4);
+  @EndUserText.label : 'Grupo de Embalagem'
+  grp_emb               : abap.char(3);
+  @EndUserText.label : 'Relevante para a próxima Montagem'
+  rel_mon               : abap.char(1);
+  @EndUserText.label : 'Código de Certificação'
+  cod_certif            : abap.char(1);
+  @EndUserText.label : 'Grupo CAS'
+  grau_restricao        : abap.char(1);
+  @EndUserText.label : 'Usuário do Comitê'
+  usercomit             : abap.char(12);
+  matctrl               : abap_boolean;
+  userincl              : syuname;
+  @EndUserText.label : 'Data de criação'
+  datainc               : abap.dats;
+  @EndUserText.label : 'Hora da criação do registro'
+  horaincl              : abap.tims;
+  useralt               : syuname;
+  @EndUserText.label : 'Data da última modificação'
+  dataalt               : abap.dats;
+  @EndUserText.label : 'Hora da última modificação'
+  horaalt               : abap.tims;
+  createdby             : abp_creation_user;
+  createdat             : abp_creation_tstmpl;
+  last_changed_at       : abp_lastchange_tstmpl;
+  local_last_changed_at : abp_locinst_lastchange_tstmpl;
+
+}

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Data Element: ZSTATUS_MAT - Status do Material -->
+<!-- Domain: ZMATSTATUSPURCHASED, Type: CHAR(1) -->
+<!-- Labels: Short=Status, Medium=Status Mat., Long=Status do Material -->
+<dataElement name="ZSTATUS_MAT" domain="ZMATSTATUSPURCHASED" description="Status do Material">
+  <labels>
+    <short length="6">Status</short>
+    <medium length="11">Status Mat.</medium>
+    <long length="18">Status do Material</long>
+    <heading length="6">Status</heading>
+  </labels>
+</dataElement>

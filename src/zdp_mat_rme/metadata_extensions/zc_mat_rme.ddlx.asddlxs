@@ -1,0 +1,317 @@
+@Metadata.layer: #CORE
+@UI: {
+  headerInfo: {
+    typeName: 'RME: Material Comprado',
+    typeNamePlural: 'RME: Materiais Comprados',
+    title: {
+    label: 'TESTE',
+      type: #STANDARD,
+      value: 'Matnr'
+    },
+    description: {
+      label: 'Root entity',
+      type: #STANDARD,
+      value: 'Omrme'
+    },
+    typeImageUrl: 'sap-icon://product'
+  }
+}
+@UI.lineItem: [ { criticality: 'SitMatCriticality' } ]
+annotate view ZC_MAT_RME with
+{
+
+  @UI.facet: [
+
+   // Agrupador de facetas #FacetCollection (coluna 1 - esquerda)
+    {
+      purpose : #HEADER,
+      id      : 'FacetCollection',
+      type    : #COLLECTION,
+      position: 10
+    },
+    // Campos #DATAPOINT_REFERENCE da coluna 1
+        {
+          parentId        : 'FacetCollection',
+          type            : #DATAPOINT_REFERENCE,
+          targetQualifier : 'Produto'
+        },
+
+        {
+          parentId        : 'FacetCollection',
+          type            : #DATAPOINT_REFERENCE,
+          targetQualifier : 'Dono'
+        },
+
+   // Agrupador de facetas #FacetCollection1 (coluna 2 - lado direito)
+    {
+      purpose : #HEADER,
+      id      : 'FacetCollection1',
+      type    : #COLLECTION,
+      position: 20
+    },
+    // Campos #DATAPOINT_REFERENCE da coluna 2
+        {
+          parentId        : 'FacetCollection1',
+          type            : #DATAPOINT_REFERENCE,
+          targetQualifier : 'Peca'
+        },
+
+        {
+          parentId        : 'FacetCollection1',
+          type            : #DATAPOINT_REFERENCE,
+          targetQualifier : 'Status'
+        },
+
+   // Agrupador de facetas #FacetCollection2 (coluna 3 - lado direito)
+    {
+      purpose : #HEADER,
+      id      : 'FacetCollection2',
+      type    : #COLLECTION,
+      position: 30
+    },
+    // Campos #DATAPOINT_REFERENCE da coluna 3
+        {
+          parentId        : 'FacetCollection2',
+          type            : #DATAPOINT_REFERENCE,
+          targetQualifier : 'OMRME'
+        },
+
+        {
+          parentId        : 'FacetCollection2',
+          type            : #DATAPOINT_REFERENCE,
+          targetQualifier : 'Programa'
+        },
+
+  // Agrupador de facetas #FacetCollection3 (coluna 4 - lado direito)
+    {
+      purpose : #HEADER,
+      id      : 'FacetCollection3',
+      type    : #COLLECTION,
+      position: 30
+    },
+    // Campos #DATAPOINT_REFERENCE da coluna 4
+        {
+          parentId        : 'FacetCollection3',
+          type            : #DATAPOINT_REFERENCE,
+          targetQualifier : 'Companhia'
+        },
+
+        {
+          parentId        : 'FacetCollection3',
+          type            : #DATAPOINT_REFERENCE,
+          targetQualifier : 'CodSitMat'
+        },
+
+
+  // ObjectPageSTANDARD
+
+    // Search Term #OPSection
+        {
+          purpose: #STANDARD,
+          position: 10,
+          type: #COLLECTION,
+          label: 'Dados Básicos',
+          id: 'collectionFacetSection'
+        },
+
+        {
+          parentId   : 'collectionFacetSection',
+          label      : 'Dados a Esquerda Subsection ',
+          type       : #FIELDGROUP_REFERENCE,
+          targetQualifier: 'Esquerda'
+        },
+        // Search Term #Location
+        {
+          parentId   : 'collectionFacetSection',
+          label      : 'Dados a Direita Subsection',
+          type       : #FIELDGROUP_REFERENCE,
+          targetQualifier: 'Direita'
+        },
+
+       {
+          purpose: #STANDARD,
+          position: 20,
+          type: #COLLECTION,
+          label: 'Dados Armazenagem, Transporte e Manuseio',
+          id: 'collectionFacetSection2'
+        },
+
+        {
+          parentId   : 'collectionFacetSection2',
+          label      : 'Dados a Esquerda Subsection ',
+          type       : #FIELDGROUP_REFERENCE,
+          targetQualifier: 'Esquerda2'
+        },
+        // Search Term #Location
+        {
+          parentId   : 'collectionFacetSection2',
+          label      : 'Dados a Direita Subsection',
+          type       : #FIELDGROUP_REFERENCE,
+          targetQualifier: 'Direita2'
+        }
+
+     ]
+
+  @EndUserText.label: 'Companhia'
+  @UI.dataPoint: {
+    qualifier: 'Companhia',
+    title: 'Companhia'
+  }
+  @UI.fieldGroup: [{ position: 01, qualifier: 'Esquerda' }]
+  @UI.lineItem: [ { position: 01, importance: #HIGH } ]
+  CompanyCode;
+
+  @EndUserText.label: 'Código Embraer'
+  @UI.lineItem: [ { position: 10, importance: #HIGH } ]
+  @UI.dataPoint: {
+    qualifier: 'Produto',
+    title: 'Produto Embraer'
+  }
+  @UI.selectionField: [ { position: 10 } ]
+  Matnr;
+
+  @EndUserText.label: 'Dono'
+  @UI.dataPoint: {
+    qualifier: 'Dono',
+    title: 'Dono'
+  }
+  Owner;
+
+  @EndUserText.label: 'Nº Peça'
+  @UI.lineItem: [ { position: 20, importance: #HIGH } ]
+  @UI.dataPoint: {
+    qualifier: 'Peca',
+    title: 'Número Peça'
+  }
+  Mfrpn;
+
+  @EndUserText.label: 'Status'
+  @UI.dataPoint: {
+    qualifier: 'Status',
+    title: 'Status',
+    criticality: 'SitMatCriticality'
+  }
+  StatusCRUD;
+
+  @EndUserText.label: 'OMRME'
+  @UI.lineItem: [ { position: 40, importance: #HIGH } ]
+  @UI.dataPoint: {
+    qualifier: 'OMRME',
+    title: 'OMRME'
+  }
+  Omrme;
+
+  @EndUserText.label: 'Programa'
+  @UI.lineItem: [ { position: 50, importance: #HIGH } ]
+  @UI.selectionField: [ { position: 20 } ]
+  @UI.dataPoint: {
+    qualifier: 'Programa',
+    title: 'Programa'
+  }
+  CodProjAenv;
+
+  @EndUserText.label: 'Status do Material'
+  @UI.dataPoint: {
+    qualifier: 'CodSitMat',
+    title: 'Status do Material',
+    criticality: 'SitMatCriticality',
+    criticalityRepresentation: #WITH_ICON
+  }
+  @UI.fieldGroup: [{ position: 10, qualifier: 'Esquerda', criticality: 'SitMatCriticality' }]
+  CodSitMat;
+
+  @EndUserText.label: 'Designação Inglês'
+  @UI.lineItem: [ { position: 60, importance: #HIGH } ]
+  @UI.fieldGroup: [{ position: 20, qualifier: 'Esquerda' }]
+  Dscexpen;
+
+  @EndUserText.label: 'Designação Português'
+  @UI.lineItem: [ { position: 70, importance: #HIGH } ]
+  @UI.fieldGroup: [{ position: 30, qualifier: 'Esquerda' }]
+  Dscexppt;
+
+  @EndUserText.label: 'Código Fornecedor'
+  @UI.lineItem: [ { position: 80, importance: #MEDIUM } ]
+  @UI.fieldGroup: [{ position: 40, qualifier: 'Esquerda' }]
+  Lifnr;
+
+  @EndUserText.label: 'Tipo Documento'
+  @UI.fieldGroup: [{ position: 41, qualifier: 'Esquerda' }]
+  Doctype;
+
+  @EndUserText.label: 'Tipo'
+  @UI.fieldGroup: [{ position: 50, qualifier: 'Esquerda' }]
+  Matkl;
+
+  @EndUserText.label: 'Especificação Técnica'
+  @UI.fieldGroup: [{ position: 60, qualifier: 'Esquerda' }]
+  Ferth;
+
+  @EndUserText.label: 'Classificação RME (Cap.)'
+  @UI.fieldGroup: [{ position: 70, qualifier: 'Esquerda' }]
+  NumCapRme;
+
+  @EndUserText.label: 'Subcap. RME'
+  @UI.fieldGroup: [{ position: 80, qualifier: 'Esquerda' }]
+  NumSucpRme;
+
+  @EndUserText.label: 'Seção RME'
+  @UI.fieldGroup: [{ position: 90, qualifier: 'Esquerda' }]
+  NumScaoRme;
+
+  @EndUserText.label: 'Unidade Projeto'
+  @UI.fieldGroup: [{ position: 100, qualifier: 'Esquerda' }]
+  Ausme;
+
+  @EndUserText.label: 'Dimensão do Fornecimento'
+  @UI.fieldGroup: [{ position: 110, qualifier: 'Esquerda' }]
+  Groes;
+
+  @EndUserText: { label: 'Peso Calc. (G) de "uma" Unidade Básica',
+                  quickInfo: 'Peso Calculado em Gramas de uma Unidade Básica' }
+  @UI.fieldGroup: [{ position: 110, qualifier: 'Esquerda' }]
+  VlrPesCalc;
+
+  @EndUserText.label: 'Origem'
+  @UI.fieldGroup: [{ position: 120, qualifier: 'Esquerda' }]
+  OrigemMaterial;
+
+  @EndUserText.label: 'Certificação'
+  @UI.fieldGroup: [{ position: 130, qualifier: 'Esquerda' }]
+  CodCertif;
+
+  @EndUserText.label: 'Cage Code'
+  @UI.fieldGroup: [{ position: 10, qualifier: 'Direita' }]
+  Emnfr;
+
+  @EndUserText.label: 'Número Documento'
+  @UI.fieldGroup: [{ position: 20, qualifier: 'Direita' }]
+  Docnro;
+
+  @EndUserText.label: 'Norma Técnica'
+  @UI.fieldGroup: [{ position: 30, qualifier: 'Direita' }]
+  Normt;
+
+  @EndUserText.label: 'Indicador Controle'
+  @UI.fieldGroup: [{ position: 40, qualifier: 'Direita' }]
+  IndRastb;
+
+  @EndUserText.label: 'Unidade Básica'
+  @UI.fieldGroup: [{ position: 50, qualifier: 'Direita' }]
+  Meins;
+
+  @EndUserText.label: 'Certificação TSO/JTSO'
+  @UI.fieldGroup: [{ position: 60, qualifier: 'Direita' }]
+  IndTso;
+
+  @EndUserText.label: 'CPL (ENS-004600)'
+  @UI.fieldGroup: [{ position: 70, qualifier: 'Direita' }]
+  CodCpl;
+
+  @EndUserText.label: 'Material Controlado'
+  @UI.fieldGroup: [{ position: 80, qualifier: 'Direita' }]
+  Matctrl;
+
+  @UI.hidden: true
+  LocalLastChangedAt;
+}

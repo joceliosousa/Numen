@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Domain: ZSTATUSPURCHASED - Status do Material -->
+<!-- Type: CHAR(2) -->
+<!-- Fixed Values: (empty)=Released, 06=Draft, 07=Proposed, 08=Rejected -->
+<domain name="ZSTATUSPURCHASED" datatype="CHAR" length="2" description="Status do Material">
+  <fixValues>
+    <value position="1" low="" text="Released"/>
+    <value position="2" low="06" text="Draft"/>
+    <value position="3" low="07" text="Proposed"/>
+    <value position="4" low="08" text="Rejected"/>
+  </fixValues>
+</domain>

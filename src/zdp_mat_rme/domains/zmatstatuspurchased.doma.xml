@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Domain: ZMATSTATUSPURCHASED - Status do Material -->
+<!-- Type: CHAR(1) -->
+<!-- Fixed Values: K=In evaluation, L=Released, D=Deactivated, U=Under analysis (EO) -->
+<domain name="ZMATSTATUSPURCHASED" datatype="CHAR" length="1" description="Status do Material">
+  <fixValues>
+    <value position="1" low="K" text="In evaluation"/>
+    <value position="2" low="L" text="Released"/>
+    <value position="3" low="D" text="Deactivated"/>
+    <value position="4" low="U" text="Under analysis (EO)"/>
+  </fixValues>
+</domain>

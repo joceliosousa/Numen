@@ -1,0 +1,4 @@
+@EndUserText.label: 'Service definition for ZC_MAT_RME'
+define service ZSD_MAT_RME_O4 {
+  expose ZC_MAT_RME as MaterialMRE;
+}
