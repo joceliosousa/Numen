@@ -1,0 +1,153 @@
+managed implementation in class ZBP_R_MAT_RME unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZR_MAT_RME alias MaterialMRE
+persistent table ztdp_matrmema
+draft table ztdp_matrmema_d
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global )
+early numbering
+{
+  field ( mandatory : create, readonly : update )
+  CodProjAenv,
+  //CompanyCode,
+  Mfrpn;
+
+  field ( mandatory )
+  CodSitMat,
+  Dscexpen,
+  Dscexppt,
+  Emnfr,
+  Lifnr,
+  Ferth,
+  NumCapRme,
+  NumSucpRme,
+  NumScaoRme,
+  Ausme,
+  VlrPesCalc,
+  OrigemMaterial,
+  IndRastb,
+  IndTso,
+  Matctrl,
+  CodOnu;
+  //GrpEmb,
+  //GrauRestricao;
+
+  field ( readonly )
+  CompanyCode,
+  Matnr,
+  Omrme,
+  CodCertif,
+  CodCpl,
+  Meins,
+  GrpEmb,
+  GrauRestricao,
+  Createdat,
+  Createdby,
+  LastChangedAt,
+  LocalLastChangedAt;
+
+  field ( features : instance ) CodSitMat;
+
+  create;
+  update;
+  delete;
+
+  factory action copy [1];
+
+  draft action Edit with additional implementation;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validateMandatoryFields;
+  }
+
+  validation validateMandatoryFields on save
+  { create; update; }
+
+  // on modify: executa imediatamente ao alterar o campo no buffer → necessário para side effects
+  determination detAlteraCriticidade on modify { field CodSitMat; }
+  determination detUnidadeMedida on modify { field Ausme; }
+  determination setDefaultValues on modify { create; }
+  determination detGrupoEmbalagem on modify { field CodOnu; }
+
+  side effects
+  {
+    // Quando CodSitMat é alterado → executa detAlteraCriticidade e recarrega SitMatCriticality na UI
+    field CodSitMat affects field SitMatCriticality;
+    field Ausme affects field Meins;
+    field CodOnu affects field GrpEmb;
+  }
+
+  mapping for ztdp_matrmema
+    {
+      Matnr              = matnr;
+      Omrme              = omrme;
+      Mfrpn              = mfrpn;
+      MfrpnAn            = mfrpn_an;
+      CompanyCode        = bukrs;
+      Owner              = owner;
+      CodPcrDes          = cod_pcr_des;
+      CodPcrPrcd         = cod_pcr_prcd;
+      Lifnr              = lifnr;
+      Emnfr              = emnfr;
+      Zmstae             = zmstae;
+      CodSitMat          = cod_sit_mat;
+      OrigemMaterial     = origem_material;
+      CodProjAenv        = cod_proj_aenv;
+      Dscexpen           = dscexpen;
+      Dscresen           = dscresen;
+      Dscexppt           = dscexppt;
+      Dscrespt           = dscrespt;
+      Matkl              = matkl;
+      Ferth              = ferth;
+      Normt              = normt;
+      NumCapRme          = num_cap_rme;
+      NumSucpRme         = num_sucp_rme;
+      NumScaoRme         = num_scao_rme;
+      IndRastb           = ind_rastb;
+      Xchpf              = xchpf;
+      Sernp              = sernp;
+      Groes              = groes;
+      Meins              = meins;
+      Ausme              = ausme;
+      VlrPesCalc         = vlr_pes_calc;
+      Ntgew              = ntgew;
+      Aprogrup           = aprogrup;
+      Profl              = profl;
+      Raube              = raube;
+      Mhdhb              = mhdhb;
+      QtdCiclPrsv        = qtd_cicl_prsv;
+      QtdTpoPrsv         = qtd_tpo_prsv;
+      ZqtdTpoRtst        = zqtd_tpo_rtst;
+      QtdCiclRtst        = qtd_cicl_rtst;
+      Anaresp            = anaresp;
+      Tipmod             = tipmod;
+      Approver           = approver;
+      IndRepnItem        = ind_repn_item;
+      Indomrme           = indomrme;
+      IndTso             = ind_tso;
+      CodCpl             = cod_cpl;
+      CodOnu             = cod_onu;
+      GrpEmb             = grp_emb;
+      RelMon             = rel_mon;
+      CodCertif          = cod_certif;
+      GrauRestricao      = grau_restricao;
+      Usercomit          = usercomit;
+      Matctrl            = matctrl;
+      Userincl           = userincl;
+      Datainc            = datainc;
+      Horaincl           = horaincl;
+      Useralt            = useralt;
+      Dataalt            = dataalt;
+      Horaalt            = horaalt;
+      Createdby          = createdby;
+      Createdat          = createdat;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+}
