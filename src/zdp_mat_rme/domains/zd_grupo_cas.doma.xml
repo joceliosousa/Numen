@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Domain: ZD_GRUPO_CAS - Domínio Grupo CAS -->
+<!-- Type: CHAR(1) -->
+<!-- Fixed Values: 1=Proibido, 2=Restrito, 3=Controlado, 4=Controlado / Restrito, 5=Alerta, 6=Sem restrição, (blank)=Em Análise -->
+<domain name="ZD_GRUPO_CAS" datatype="CHAR" length="1" description="Domínio Grupo CAS">
+  <fixValues>
+    <value position="1" low="1" text="Proibido"/>
+    <value position="2" low="2" text="Restrito"/>
+    <value position="3" low="3" text="Controlado"/>
+    <value position="4" low="4" text="Controlado / Restrito"/>
+    <value position="5" low="5" text="Alerta"/>
+    <value position="6" low="6" text="Sem restrição"/>
+    <value position="7" low="" text="Em Análise"/>
+  </fixValues>
+</domain>

@@ -1,0 +1,19 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Lista',
+    typeNamePlural: 'Lista'
+  }
+}
+annotate entity ZI_TSOJTSO_DATA with
+{
+
+  @EndUserText.label: 'Tipo Cert.'
+  @UI.lineItem: [ { position: 20 } ]
+  CertType;
+
+  @EndUserText.label: 'Número'
+  @UI.lineItem: [ { position: 30 } ]
+  CertNumb;
+
+}

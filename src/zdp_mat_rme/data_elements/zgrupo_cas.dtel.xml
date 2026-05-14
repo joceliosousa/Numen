@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Data Element: ZGRUPO_CAS - Grupo CAS -->
+<!-- Domain: ZD_GRUPO_CAS, Type: CHAR(1) -->
+<!-- Labels: Short=Grupo CAS, Medium=Grupo CAS, Long=Grupo CAS -->
+<dataElement name="ZGRUPO_CAS" domain="ZD_GRUPO_CAS" description="Grupo CAS">
+  <labels>
+    <short length="10">Grupo CAS</short>
+    <medium length="20">Grupo CAS</medium>
+    <long length="40">Grupo CAS</long>
+    <heading length="55">Grupo CAS</heading>
+  </labels>
+</dataElement>

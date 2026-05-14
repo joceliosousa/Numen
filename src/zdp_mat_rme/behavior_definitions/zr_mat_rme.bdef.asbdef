@@ -8,11 +8,12 @@ draft table ztdp_matrmema_d
 etag master LocalLastChangedAt
 lock master total etag LastChangedAt
 authorization master ( global )
+with additional save
 early numbering
 {
   field ( mandatory : create, readonly : update )
   CodProjAenv,
-  CompanyCode,
+  //CompanyCode,
   Mfrpn;
 
   field ( mandatory )
@@ -30,14 +31,25 @@ early numbering
   OrigemMaterial,
   IndRastb,
   IndTso,
-  Matctrl;
+  Matctrl,
+  CodOnu,
+  Raube,
+  RelMon,
+  CodGHS;
 
   field ( readonly )
+  CompanyCode,
   Matnr,
   Omrme,
   CodCertif,
   CodCpl,
   Meins,
+  GrpEmb,
+  ClasseRisco,
+  GrauRestricao,
+  MaterialPerecivel,
+  MaterialPreservavel,
+  MaterialRetestavel,
   Createdat,
   Createdby,
   LastChangedAt,
@@ -48,6 +60,8 @@ early numbering
   create;
   update;
   delete;
+
+  factory action copy [1];
 
   draft action Edit with additional implementation;
   draft action Activate optimized;
@@ -64,12 +78,15 @@ early numbering
   // on modify: executa imediatamente ao alterar o campo no buffer → necessário para side effects
   determination detAlteraCriticidade on modify { field CodSitMat; }
   determination detUnidadeMedida on modify { field Ausme; }
+  determination setDefaultValues on modify { create; }
+  determination detGrupoEmbalagem on modify { field CodOnu; }
 
   side effects
   {
     // Quando CodSitMat é alterado → executa detAlteraCriticidade e recarrega SitMatCriticality na UI
     field CodSitMat affects field SitMatCriticality;
     field Ausme affects field Meins;
+    field CodOnu affects field GrpEmb, field ClasseRisco;
   }
 
   mapping for ztdp_matrmema

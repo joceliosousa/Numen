@@ -2,10 +2,11 @@
 @Metadata.allowExtensions: true
 @EndUserText.label: 'Projection View for ZR_MAT_RME'
 @ObjectModel.semanticKey: [ 'CompanyCode', 'Matnr', 'Mfrpn', 'Omrme' ]
-
+//@Metadata.ignorePropagatedAnnotations: true
 define root view entity ZC_MAT_RME
   provider contract transactional_query
   as projection on ZR_MAT_RME
+
 {
 
   key Matnr,
@@ -36,7 +37,7 @@ define root view entity ZC_MAT_RME
       Dscexppt,
       Dscrespt,
       @ObjectModel.text.element: ['TipoMatDesc']
-      @UI.textArrangement: #TEXT_ONLY
+      @UI.textArrangement: #TEXT_LAST
       Matkl,
       _TipoMaterial.Descricao                   as TipoMatDesc,
       @ObjectModel.text.element: ['OrigemMaterialDesc']
@@ -66,10 +67,6 @@ define root view entity ZC_MAT_RME
       Profl,
       Raube,
       Mhdhb,
-      QtdCiclPrsv,
-      QtdTpoPrsv,
-      ZqtdTpoRtst,
-      QtdCiclRtst,
       Anaresp,
       Tipmod,
       Approver,
@@ -81,13 +78,14 @@ define root view entity ZC_MAT_RME
       GrpEmb,
       RelMon,
       CodCertif,
+
       @ObjectModel.text.element: ['CodSitMatText']
       @UI.textArrangement: #TEXT_ONLY
       CodSitMat,
       _StatusMat.StatusMaterialDescription      as CodSitMatText,
       StatusCRUD,
-      //      StatusCRUDCriticality,
       SitMatCriticality,
+
       @ObjectModel.text.element: ['CompanyCodeText']
       @UI.textArrangement: #TEXT_ONLY
       CompanyCode,
@@ -97,12 +95,40 @@ define root view entity ZC_MAT_RME
       GrauRestricao,
       Usercomit,
       Matctrl,
+
+      ClasseRisco,
+      _GrupoCas.GrupoCASDescription,
+
+      @ObjectModel.text.element: ['ClasseGHSDesc']
+      @UI.textArrangement: #TEXT_LAST
+      CodGHS,
+      _ClasseGHSDesc.Descricao                  as ClasseGHSDesc,
+
+      // dados de preservação e perecibilidade
+      QtdCiclPerec                              as QtdCicloPerecivel,
+      QtdCiclPrsv                               as QtdCicloPreservacao,
+      QtdTpoPrsv                                as QtdTempoPreservacao,
+      QtdTpoPerec                               as QtdTempoPerecivel,
+      ZqtdTpoRtst                               as QtdTempoRetestavel,
+      QtdCiclRtst                               as QtdCicloRetestavel,
+
+      MaterialPerecivel,
+      ManperText                                as MaterialPerecivelText,
+
+      MaterialPreservavel,
+      ManpreText                                as MaterialPreservavelText,
+
+      MaterialRetestavel,
+      ManretText                                as MaterialRetestavelText,
+
       Userincl,
       Datainc,
       Horaincl,
       Useralt,
       Dataalt,
       Horaalt,
-      LocalLastChangedAt
+      LocalLastChangedAt,
+
+      _TsoJtsoData
 
 }
