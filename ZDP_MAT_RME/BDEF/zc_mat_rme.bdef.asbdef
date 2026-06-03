@@ -1,0 +1,89 @@
+projection;
+strict ( 2 );
+use draft;
+use side effects;
+
+define behavior for ZC_MAT_RME alias MaterialMRE
+use etag
+
+{
+  use create;
+  use update;
+  use delete;
+
+  use action copy;
+
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+  use action triggerMaterialProibidoRoot;
+
+  use association _TsoJtso { create; with draft; }
+  use association _MatCas { create; with draft; }
+  use association _CtrlMat { create; with draft; }
+  use association _MatPrograma { create; with draft; }
+  use association _MatFornecedor { create; with draft; }
+  use association _MatParceiro { create; with draft; }
+  use association _MatKit { create; with draft; }
+}
+
+define behavior for ZC_TSOJTSO_MAN alias TsoJtso
+{
+  use update;
+  use delete;
+
+  use association _MatRme { with draft; }
+}
+
+define behavior for ZC_MAT_CAS_MAN alias MatCAS
+{
+  use update;
+  use delete;
+//  use action triggerMaterialProibido;
+
+  use association _MatRme { with draft; }
+}
+
+define behavior for ZC_MAT_RME_CONTROL alias MatRmeControl
+{
+  use update;
+  use delete;
+
+  use association _MatRme { with draft; }
+}
+
+define behavior for ZC_MAT_RME_APL alias MatPrograma
+{
+  use update;
+  use delete;
+
+  use association _MatRme { with draft; }
+}
+
+define behavior for ZC_MAT_RME_FORN alias MatFornecedor
+{
+  use update;
+  use delete;
+  use action validateSupplierOnChange;
+
+  use association _MatRme { with draft; }
+}
+
+define behavior for ZC_MAT_RME_PARC alias MatParceiro
+{
+  //use update;
+  use delete;
+  //use action validatePartnerOnChange;
+
+  use association _MatRme { with draft; }
+}
+
+define behavior for ZC_MAT_RME_KIT alias MatKit
+{
+  use update;
+  use delete;
+
+  use association _MatRme { with draft; }
+}

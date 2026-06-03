@@ -1,0 +1,39 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Certificado',
+    typeNamePlural: 'Certificados'
+  }
+}
+annotate entity ZC_MAT_RME_CONTROL with
+{
+
+  @UI.facet: [
+     {
+       purpose: #STANDARD,
+       type: #IDENTIFICATION_REFERENCE,
+       label: 'Licença'
+     }
+   ]
+
+  @EndUserText.label: 'Tipo Licença'
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  ExpSecurity;
+
+  @EndUserText.label: 'ID Engenharia'
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  ExportLicense;
+
+  @EndUserText: { label: 'Licença', quickInfo: 'Obter as licenças para Material Controlado - com TAA (Oracle)' }
+  @UI.lineItem: [ { position: 30, cssDefault.width: '150px' } ]
+  @UI.identification: [ { position: 30 } ]
+  LicenseNumber;
+
+  @EndUserText.label: 'Status'
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 40 } ]
+  Status;
+
+}

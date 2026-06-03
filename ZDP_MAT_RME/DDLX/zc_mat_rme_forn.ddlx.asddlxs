@@ -1,0 +1,130 @@
+@Metadata.layer: #CUSTOMER
+
+@UI: {
+  headerInfo: {
+    typeName: 'Fornecedor',
+    typeNamePlural: 'Fornecedores'
+  }
+}
+annotate entity ZC_MAT_RME_FORN with
+{
+
+  @UI.facet: [
+      {
+        purpose: #STANDARD,
+        type: #IDENTIFICATION_REFERENCE,
+        label: 'Fornecedor'
+      }
+    ]
+
+  //  @UI.identification: [ { position: 10, hidden: #(EditHidden) } ]
+  //  EditHidden;
+
+  @EndUserText.label: 'Companhia'
+  @UI.identification: [ { position: 10, hidden: #(EditHidden) } ]
+  SupplierCompanyName;
+
+  @EndUserText.label: 'Codigo Fornecedor'
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 20 } ]
+  Lifnr;
+
+  @EndUserText.label: 'Nome Curto'
+  @UI.identification: [ { position: 30, hidden: #(EditHidden) } ]
+  SupplierShortName;
+
+  @EndUserText.label: 'CGC (Apenas no Brasil)'
+  @UI.identification: [ { position: 40, hidden: #(EditHidden) } ]
+  SupplierCnpj;
+
+  @EndUserText.label: 'CPF (Apenas no Brasil)'
+  @UI.identification: [ { position: 50, hidden: #(EditHidden) } ]
+  SupplierCpf;
+
+  @EndUserText.label: 'Nome Completo'
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.identification: [ { position: 60 } ]
+  SupplierFullName;
+
+  @EndUserText.label: 'Endereco'
+  @UI.identification: [ { position: 70, hidden: #(EditHidden) } ]
+  SupplierStreetName;
+
+  @EndUserText.label: 'Numero'
+  @UI.identification: [ { position: 80, hidden: #(EditHidden) } ]
+  SupplierHouseNumber;
+
+  @EndUserText.label: 'Bairro'
+  @UI.identification: [ { position: 90, hidden: #(EditHidden) } ]
+  SupplierDistrictName;
+
+  @EndUserText.label: 'Cidade'
+  @UI.identification: [ { position: 100, hidden: #(EditHidden) } ]
+  SupplierCityName;
+
+  @EndUserText.label: 'Codigo Postal'
+  @UI.identification: [ { position: 110, hidden: #(EditHidden) } ]
+  SupplierPostalCode;
+
+  @EndUserText.label: 'Estado'
+  @UI.identification: [ { position: 120, hidden: #(EditHidden) } ]
+  SupplierRegion;
+
+  @EndUserText.label: 'Pais'
+  @UI.identification: [ { position: 130, hidden: #(EditHidden) } ]
+  SupplierCountry;
+
+  @EndUserText.label: 'Cod. Telefone Brasil'
+  @UI.identification: [ { position: 140, hidden: #(EditHidden) } ]
+  SupplierBrazilPhoneCode;
+
+  @EndUserText.label: 'Cod. Telefone Inter.'
+  @UI.identification: [ { position: 150, hidden: #(EditHidden) } ]
+  SupplierInternationalPhoneCode;
+
+  @EndUserText.label: 'Telefone'
+  @UI.identification: [ { position: 160, hidden: #(EditHidden) } ]
+  SupplierPhoneNumber;
+
+  @EndUserText.label: 'Fac-simile'
+  @UI.identification: [ { position: 170, hidden: #(EditHidden) } ]
+  SupplierFaxNumber;
+
+  @EndUserText.label: 'Insc. Estadual (Apenas no Brasil)'
+  @UI.identification: [ { position: 180, hidden: #(EditHidden) } ]
+  SupplierStateTaxNumber;
+
+  @EndUserText.label: 'Fabricante Externo'
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 190 } ]
+  Emnfr;
+
+  @EndUserText.label: 'Centro'
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 200 } ]
+  Werks;
+
+  @EndUserText.label: 'QL'
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.identification: [ { position: 210 } ]
+  Sperrfkt;
+
+  @EndUserText.label: 'Documento MSDS'
+  @UI.lineItem: [ { position: 60 } ]
+  @UI.identification: [ { position: 220 } ]
+  Msds;
+
+  @EndUserText.label: 'Status'
+  @UI.lineItem: [ { position: 70 } ]
+  @UI.identification: [ { position: 230 } ]
+  Status;
+
+  //  @UI.hidden: true
+  @UI.identification: [ { position: 240 } ]
+  Dataincl;
+
+  //  @UI.hidden: true
+  @UI.identification: [ { position: 250 } ]
+  Horaincl;
+
+}

@@ -1,0 +1,44 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Lista',
+    typeNamePlural: 'Lista'
+  }
+}
+annotate entity ZC_TSOJTSO_MAN with
+{
+
+  @UI.facet: [
+     {
+       purpose: #STANDARD,
+       type: #IDENTIFICATION_REFERENCE,
+       label: 'Certificados'
+     }
+   ]
+
+  @EndUserText.label: 'Tipo Cert.'
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  CertType;
+
+  @EndUserText.label: 'Número'
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  CertNumber;
+
+  @EndUserText.label: 'Grupo'
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.identification: [ { position: 30 } ]
+  Grupo;
+
+  @EndUserText.label: 'Dal'
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 40 } ]
+  Dal;
+
+  @EndUserText.label: 'Aprovado'
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.identification: [ { position: 50 } ]
+  IndApprovacao;
+
+}

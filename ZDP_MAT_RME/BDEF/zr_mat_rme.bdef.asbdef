@@ -1,0 +1,478 @@
+managed implementation in class ZBP_R_MAT_RME unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZR_MAT_RME alias MaterialMRE
+persistent table ztdp_matrmema
+draft table ztdp_matrmema_d
+etag master LocalLastChangedAt
+lock master total etag LastChangedAt
+authorization master ( global )
+with additional save
+early numbering
+{
+  field ( mandatory : create, readonly : update )
+  CodProjAenv,
+  Mfrpn,
+  Lifnr;
+
+  field ( mandatory )
+  CodSitMat,
+  Dscexpen,
+  Dscexppt,
+  Emnfr,
+  Ferth,
+  NumCapRme,
+  NumSucpRme,
+  NumScaoRme,
+  Ausme,
+  VlrPesCalc,
+  OrigemMaterial,
+  IndRastb,
+  IndTso,
+  Matctrl,
+  CodOnu,
+  Raube,
+  RelMon,
+  CodGHS;
+
+  field ( readonly ) Datainc, Horaincl, UserAlt, Dataalt, Horaalt;
+
+  field ( readonly )
+  CompanyCode,
+  Matnr,
+  Omrme,
+  CodCertif,
+  CodCpl,
+  Meins,
+  GrpEmb,
+  ClasseRisco,
+  GrauRestricao,
+  MaterialPerecivel,
+  MaterialPreservavel,
+  MaterialRetestavel,
+  Createdat,
+  Createdby,
+  LastChangedAt,
+  LocalLastChangedAt;
+
+  field ( features : instance ) CodSitMat;
+
+  create;
+  update;
+  delete;
+
+  factory action copy [1];
+
+  draft action Edit with additional implementation;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation ( always ) MatCAS~validateMaterialProibido;
+    validation ( always ) MatParceiro~validatePartnerProibido;
+    validation ( always ) MatFornecedor~validateSupplierProibido;
+  }
+
+  validation validateMandatoryFields on save { create; update; }
+
+  determination detAlteraCriticidade on modify { field CodSitMat; }
+  determination detUnidadeMedida on modify { field Ausme; }
+  determination setDefaultValues on modify { create; }
+  determination detGrupoEmbalagem on modify { field CodOnu; }
+  determination setControlFields on save { create; }
+
+  determine action triggerMaterialProibidoRoot
+  {
+    validation MatCAS~validateMaterialProibido;
+    validation MatFornecedor~validateSupplierProibido;
+  }
+
+  side effects
+  {
+    field CodSitMat affects field SitMatCriticality;
+    field Ausme affects field Meins;
+    field CodOnu affects field GrpEmb, field ClasseRisco;
+    determine action triggerMaterialProibidoRoot
+      executed on entity _MatCas,
+                  entity _MatFornecedor
+      affects messages;
+  }
+
+  mapping for ztdp_matrmema
+    {
+      Matnr              = matnr;
+      Omrme              = omrme;
+      Mfrpn              = mfrpn;
+      MfrpnAn            = mfrpn_an;
+      CompanyCode        = bukrs;
+      Owner              = owner;
+      CodPcrDes          = cod_pcr_des;
+      CodPcrPrcd         = cod_pcr_prcd;
+      Lifnr              = lifnr;
+      Emnfr              = emnfr;
+      Zmstae             = zmstae;
+      CodSitMat          = cod_sit_mat;
+      OrigemMaterial     = origem_material;
+      CodProjAenv        = cod_proj_aenv;
+      Dscexpen           = dscexpen;
+      Dscresen           = dscresen;
+      Dscexppt           = dscexppt;
+      Dscrespt           = dscrespt;
+      Matkl              = matkl;
+      Ferth              = ferth;
+      Normt              = normt;
+      NumCapRme          = num_cap_rme;
+      NumSucpRme         = num_sucp_rme;
+      NumScaoRme         = num_scao_rme;
+      IndRastb           = ind_rastb;
+      Xchpf              = xchpf;
+      Sernp              = sernp;
+      Groes              = groes;
+      Meins              = meins;
+      Ausme              = ausme;
+      VlrPesCalc         = vlr_pes_calc;
+      Ntgew              = ntgew;
+      Aprogrup           = aprogrup;
+      Profl              = profl;
+      Raube              = raube;
+      QtdTpoPerec        = mhdhb;
+      QtdCiclPrsv        = qtd_cicl_prsv;
+      QtdTpoPrsv         = qtd_tpo_prsv;
+      ZqtdTpoRtst        = zqtd_tpo_rtst;
+      QtdCiclRtst        = qtd_cicl_rtst;
+      Anaresp            = anaresp;
+      Tipmod             = tipmod;
+      Approver           = approver;
+      IndRepnItem        = ind_repn_item;
+      Indomrme           = indomrme;
+      IndTso             = ind_tso;
+      CodCpl             = cod_cpl;
+      CodOnu             = cod_onu;
+      GrpEmb             = grp_emb;
+      RelMon             = rel_mon;
+      CodCertif          = cod_certif;
+      GrauRestricao      = grau_restricao;
+      Usercomit          = usercomit;
+      Matctrl            = matctrl;
+      Datainc            = datainc;
+      Horaincl           = horaincl;
+      Useralt            = useralt;
+      Dataalt            = dataalt;
+      Horaalt            = horaalt;
+      Createdby          = userincl;
+      Createdat          = createdat;
+      LastChangedAt      = last_changed_at;
+      LocalLastChangedAt = local_last_changed_at;
+    }
+
+  association _TsoJtso { create; with draft; }
+  association _MatCas { create; with draft; }
+  association _CtrlMat { create; with draft; }
+  association _MatPrograma { create; with draft; }
+  association _MatFornecedor { create; with draft; }
+  association _MatParceiro { create; with draft; }
+  association _MatKit { create; with draft; }
+
+}
+
+define behavior for ZI_TSOJTSO_MAN alias TsoJtso
+persistent table ztdp_tsojtsomanu
+draft table ztdp_tsojtsoma_d
+lock dependent by _MatRme
+authorization dependent by _MatRme
+{
+  update;
+  delete;
+
+  field ( mandatory : create, readonly : update ) CertType, CertNumber;
+  field ( readonly ) Matnr, Omrme;
+  field ( readonly ) UserIncl, DataIncl, HoraIncl, UserAlt, DataAlt, HoraAlt;
+
+  determination setControlFields on modify { create; }
+  determination setUpdateFields on modify { field Grupo, Dal, IndApprovacao, Status; }
+
+  mapping for ztdp_tsojtsomanu
+    {
+      Matnr         = matnr;
+      Omrme         = omrme;
+      CertType      = certtype;
+      CertNumber    = certnumb;
+      Grupo         = grupo;
+      Dal           = dal;
+      IndApprovacao = indappro;
+      Status        = status;
+      UserIncl      = userincl;
+      DataIncl      = dataincl;
+      HoraIncl      = horaincl;
+      UserAlt       = useralt;
+      DataAlt       = dataalt;
+      HoraAlt       = horaalt;
+    }
+
+  association _MatRme { with draft; }
+
+}
+
+define behavior for ZI_MAT_CAS_MAN alias MatCAS
+persistent table ztdp_matrmecasma
+draft table ztdp_matrmecas_d
+lock dependent by _MatRme
+authorization dependent by _MatRme
+early numbering
+{
+
+  update;
+  delete;
+
+  field ( mandatory : create, readonly : update ) Codcas;
+  field ( readonly ) Matnr, Omrme, Seqcas, DescricaoPt, DescricaoEn, GrupoRestricao, Status;
+  field ( readonly ) Uname, Aedat, Uptim;
+
+  determination setControlFields on modify { create; }
+  determination detDescricaoCas on modify { field Codcas; }
+  validation validateMaterialProibido on save { field Codcas; }
+
+  side effects
+  {
+    field Codcas affects $self, field DescricaoPt, field DescricaoEn, field GrupoRestricao;
+  }
+
+  mapping for ztdp_matrmecasma
+    {
+      Matnr           = codemb;
+      Omrme           = omrme;
+      Codcas          = codcas;
+      Seqcas          = seqcas;
+      Concentracao    = concentracao;
+      ConcentracaoOri = concentracao_ori;
+      DescricaoPt     = descricao_pt;
+      DescricaoPtOri  = descricao_pt_ori;
+      DescricaoEn     = descricao_en;
+      DescricaoEnOri  = descricao_en_ori;
+      InclCasNumber   = incl_cas_number;
+      Uname           = uname;
+      Aedat           = aedat;
+      Uptim           = uptim;
+      Status          = status;
+    }
+
+  association _MatRme { with draft; }
+
+}
+
+define behavior for zi_mat_rme_control alias MatRmeControl
+persistent table ztdp_matrmectdma
+draft table ztdp_matrmectd_d
+lock dependent by _MatRme
+authorization dependent by _MatRme
+{
+
+  update;
+  delete;
+
+  field ( mandatory : create, readonly : update ) ExpSecurity, ExportLicense;
+  field ( readonly ) Matnr, Omrme;
+  field ( readonly ) Uname, Aedat, Uptim, Status, LicenseNumber;
+
+  determination detMatCtrlFields on modify { field ExportLicense; }
+
+  side effects
+  {
+    field ExportLicense affects field ExpSecurity, field Status;
+  }
+
+  mapping for ztdp_matrmectdma
+    {
+      Matnr         = codemb;
+      Omrme         = omrme;
+      ExpSecurity   = expsecrty;
+      ExportLicense = exportlic;
+      Uname         = uname;
+      Aedat         = aedat;
+      Uptim         = uptim;
+      Status        = status;
+    }
+
+  association _MatRme { with draft; }
+
+}
+
+define behavior for ZI_MAT_RME_APL alias MatPrograma
+persistent table ZTDP_MATRMEAPLMA
+draft table ZTDP_MATRMEAPL_D
+lock dependent by _MatRme
+authorization dependent by _MatRme
+{
+
+  update;
+  delete;
+
+  field ( mandatory : create, readonly : update ) CodProjAenv, Doctype, Docnro;
+  field ( readonly ) Matnr, Omrme;
+  field ( readonly ) Userincl, Useralt, Dataincl, Horaincl, Dataalt, Horaalt, Status;
+
+  determination setControlFields on modify { create; field CodProjAenv, Doctype, Docnro; }
+
+  side effects
+  {
+    field CodProjAenv affects field Status;
+  }
+
+  mapping for ZTDP_MATRMEAPLMA
+    {
+      Matnr         = matnr;
+      Omrme         = omrme;
+      CodProjAenv   = cod_proj_aenv;
+      Doctype       = doctype;
+      Docnro        = docnro;
+      Userincl      = userincl;
+      DataIncl      = dataincl;
+      Horaincl      = horaincl;
+      Useralt       = useralt;
+      DataAlt       = dataalt;
+      HoraAlt       = horaalt;
+      Status        = status;
+    }
+
+  association _MatRme { with draft; }
+
+}
+
+define behavior for ZI_MAT_RME_FORN alias MatFornecedor
+persistent table ztdp_matrmeforma
+draft table ztdp_matrmefor_d
+lock dependent by _MatRme
+authorization dependent by _MatRme
+early numbering
+{
+
+  update;
+  delete;
+
+  field ( mandatory : create, readonly : update ) Lifnr;
+  field ( readonly ) Matnr, Omrme, Werks, Emnfr, Indempa, Sperrfkt, SperrfktOrig, Msds, NumMsdsOrig, Msdsdoc, IndAnexMsds;
+  field ( readonly ) Userincl, Useralt, Dataincl, Horaincl, Dataalt, Horaalt, Status;
+
+  determination setDefaultValues on modify { create; }
+  validation validateSupplierProibido on save { field Lifnr; }
+
+  determine action validateSupplierOnChange
+  {
+    validation validateSupplierProibido;
+  }
+
+  side effects
+  {
+    field Lifnr affects messages;
+    determine action validateSupplierOnChange executed on field Lifnr affects messages;
+  }
+
+  mapping for ztdp_matrmeforma
+    {
+      Matnr         = matnr;
+      Omrme         = omrme;
+      Lifnr         = lifnr;
+      Werks         = werks;
+      Indempa       = indempa;
+      Emnfr         = emnfr;
+      Sperrfkt      = sperrfkt;
+      SperrfktOrig  = sperrfkt_orig;
+      Msds          = msds;
+      NumMsdsOrig   = num_msds_orig;
+      Msdsdoc       = msdsdoc;
+      IndAnexMsds   = ind_anex_msds;
+      Status        = status;
+      Userincl      = userincl;
+      Dataincl      = dataincl;
+      Horaincl      = horaincl;
+      Useralt       = useralt;
+      Dataalt       = dataalt;
+      Horaalt       = horaalt;
+    }
+
+  association _MatRme { with draft; }
+
+}
+
+define behavior for ZI_MAT_RME_PARC alias MatParceiro
+persistent table ztdp_matrmeforma
+draft table ztdp_matrmepar_d
+lock dependent by _MatRme
+authorization dependent by _MatRme
+early numbering
+{
+
+  internal update;
+  delete;
+
+  field ( mandatory : create, readonly : update ) Lifnr;
+  field ( readonly ) Matnr, Omrme, Werks, Emnfr, Indempa, Sperrfkt, SperrfktOrig, Msds, NumMsdsOrig, Msdsdoc, IndAnexMsds;
+  field ( readonly ) Userincl, Useralt, Dataincl, Horaincl, Dataalt, Horaalt, Status;
+
+  determination setDefaultValues on modify { create; }
+  validation validatePartnerProibido on save { field Lifnr; }
+
+  mapping for ztdp_matrmeforma
+    {
+      Matnr         = matnr;
+      Omrme         = omrme;
+      Lifnr         = lifnr;
+      Werks         = werks;
+      Indempa       = indempa;
+      Emnfr         = emnfr;
+      Sperrfkt      = sperrfkt;
+      SperrfktOrig  = sperrfkt_orig;
+      Msds          = msds;
+      NumMsdsOrig   = num_msds_orig;
+      Msdsdoc       = msdsdoc;
+      IndAnexMsds   = ind_anex_msds;
+      Status        = status;
+      Userincl      = userincl;
+      Dataincl      = dataincl;
+      Horaincl      = horaincl;
+      Useralt       = useralt;
+      Dataalt       = dataalt;
+      Horaalt       = horaalt;
+    }
+
+  association _MatRme { with draft; }
+
+}
+
+define behavior for ZI_MAT_RME_KIT alias MatKit
+persistent table ztdp_matrmekitma
+draft table ztdp_matrmekit_d
+lock dependent by _MatRme
+authorization dependent by _MatRme
+{
+
+  update;
+  delete;
+
+  field ( mandatory : create, readonly : update ) Matnrkit;
+  field ( readonly ) Matnr, Omrme, CodigoEmbraer;
+  field ( readonly ) Userincl, Useralt, Dataincl, Horaincl, Dataalt, Horaalt, Status;
+
+  determination setControlFields on modify { create; }
+
+  mapping for ztdp_matrmekitma
+    {
+      Matnr     = matnr;
+      Omrme     = omrme;
+      Matnrkit  = matnrkit;
+      Qtde      = qtde;
+      QtdeOrig  = qtde_orig;
+      Status    = status;
+      Userincl  = userincl;
+      Dataincl  = dataincl;
+      Horaincl  = horaincl;
+      Useralt   = useralt;
+      Dataalt   = dataalt;
+      Horaalt   = horaalt;
+    }
+
+  association _MatRme { with draft; }
+
+}

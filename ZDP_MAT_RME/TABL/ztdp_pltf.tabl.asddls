@@ -1,0 +1,31 @@
+@EndUserText.label : 'ZDPTPL008 - Tabela de Tipo de Aeronave'
+@AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
+@AbapCatalog.tableCategory : #TRANSPARENT
+@AbapCatalog.deliveryClass : #A
+@AbapCatalog.dataMaintenance : #RESTRICTED
+define table ztdp_pltf {
+
+  @EndUserText.label : 'Mandante'
+  key client        : abap.clnt not null;
+  @EndUserText.label : 'Código de Tipo'
+  key cod_proj_aenv : abap.char(4) not null;
+  @EndUserText.label : 'Descrição de Tipo'
+  dscpltf           : abap.char(50);
+  @EndUserText.label : 'Código da Plataforma'
+  cod_pltf          : abap.char(4);
+  @EndUserText.label : 'Código da versão da ATA utilizada'
+  versata           : abap.char(4);
+  @EndUserText.label : 'Indicador de Plataforma Ativa'
+  indativ           : abap.char(1);
+  @EndUserText.label : 'Definição de estrutura única'
+  indestr           : abap.char(1);
+  @EndUserText.label : 'Tipo de Projeto ( "X" = Específico; " " = Genérico )'
+  indrme            : abap.char(1);
+  @EndUserText.label : 'Data da última modificação'
+  datatu            : abap.dats;
+  @EndUserText.label : 'Hora da última modificação'
+  horatu            : abap.tims;
+  @EndUserText.label : 'Nome do responsável pela modificação do objeto'
+  idlogin           : abap.char(12);
+
+}

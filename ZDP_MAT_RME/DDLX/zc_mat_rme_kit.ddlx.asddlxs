@@ -1,0 +1,58 @@
+@Metadata.layer: #CUSTOMER
+
+@UI: {
+  headerInfo: {
+    typeName: 'Kit RME',
+    typeNamePlural: 'Kit RME'
+  }
+}
+annotate entity ZC_MAT_RME_KIT with
+{
+
+  @UI.facet: [
+      {
+        purpose: #STANDARD,
+        type: #IDENTIFICATION_REFERENCE,
+        label: 'Kit RME'
+      }
+    ]
+
+  @EndUserText.label: 'Número Peça'
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  Matnrkit;
+
+  @EndUserText.label: 'Código Embraer'
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  CodigoEmbraer;
+
+  @EndUserText.label: 'Designação Inglês'
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.identification: [ { position: 30 } ]
+  DesignacaoIngles;
+
+  @EndUserText.label: 'Quantidade'
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 40 } ]
+  Qtde;
+
+  @EndUserText.label: 'Unidade Básica'
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.identification: [ { position: 50 } ]
+  UnidadeBasica;
+
+  @EndUserText.label: 'Status'
+  @UI.lineItem: [ { position: 60 } ]
+  @UI.identification: [ { position: 60 } ]
+  Status;
+
+  @EndUserText.label: 'Data Inclusão'
+  @UI.identification: [ { position: 70 } ]
+  Dataincl;
+
+  @EndUserText.label: 'Hora Inclusão'
+  @UI.identification: [ { position: 80 } ]
+  Horaincl;
+
+}

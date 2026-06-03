@@ -1,0 +1,60 @@
+@Metadata.layer: #CUSTOMER
+@UI: {
+  headerInfo: {
+    typeName: 'Lista',
+    typeNamePlural: 'Lista'
+  }
+}
+annotate entity ZC_MAT_CAS_MAN with
+{
+
+  @UI.facet: [
+     {
+       purpose: #STANDARD,
+       type: #IDENTIFICATION_REFERENCE,
+       label: 'CAS Number'
+     }
+   ]
+
+  @EndUserText.label: 'CAS Number'
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  Codcas;
+
+  @EndUserText.label: 'Denominação Pt'
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  DescricaoPt;
+
+  @EndUserText.label: 'Denominação En'
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.identification: [ { position: 30 } ]
+  DescricaoEn;
+
+  @EndUserText.label: 'Seq.'
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 40 } ]
+  Seqcas;
+
+  @EndUserText.label: 'Grau de Restrição'
+  @UI.lineItem: [ { position: 45, cssDefault.width: '10rem' } ]
+  @UI.identification: [ { position: 45 } ]
+  GrupoRestricao;
+
+  @EndUserText.label: 'Concentração % (MAX)'
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.identification: [ { position: 50 } ]
+  Concentracao;
+
+  @EndUserText.label: 'Incl. CAS'
+  @UI.lineItem: [ { position: 60 } ]
+  @UI.identification: [ { position: 60 } ]
+  InclCasNumber;
+
+  @EndUserText.label: 'Status'
+  @UI.lineItem: [ { position: 70 } ]
+  @UI.identification: [ { position: 70 } ]
+  Status;
+
+
+}

@@ -1,0 +1,11 @@
+@EndUserText.label: 'Service definition for ZC_MAT_RME'
+define service ZSD_MAT_RME_O4 {
+  expose ZC_MAT_RME         as MaterialMRE;
+  expose ZC_TSOJTSO_MAN     as TSOJTSO;
+  expose ZC_MAT_CAS_MAN     as MaterialCAS;
+  expose ZC_MAT_RME_CONTROL as MaterialControl;
+  expose ZC_MAT_RME_APL     as MaterialPrograma;
+  expose ZC_MAT_RME_FORN    as MaterialFornecedor;
+  expose ZC_MAT_RME_PARC    as MaterialParceiro;
+  expose ZC_MAT_RME_KIT     as MaterialKit;
+}
