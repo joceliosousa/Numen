@@ -245,10 +245,16 @@ CLASS lhc_materialmre DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
 
     CONSTANTS c_900000 TYPE c LENGTH 10 VALUE '0003000000'.
+    CONSTANTS c_state_area TYPE string VALUE 'VALIDATE_MANDATORY_FIELDS'.
 
     METHODS validateMandatoryFields FOR VALIDATE ON SAVE
       IMPORTING keys FOR MaterialMRE~validateMandatoryFields.
-
+    METHODS validateTsoJtso FOR VALIDATE ON SAVE
+      IMPORTING keys FOR MaterialMRE~validateTsoJtsoExists.
+    METHODS validateMatklUm FOR VALIDATE ON SAVE
+      IMPORTING keys FOR MaterialMRE~validateMatklUm.
+    METHODS validateMatControlExists FOR VALIDATE ON SAVE
+      IMPORTING keys FOR MaterialMRE~validateMatControlExists.
     METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
       IMPORTING REQUEST requested_authorizations FOR MaterialMRE RESULT result.
     METHODS Edit FOR MODIFY
@@ -280,6 +286,43 @@ ENDCLASS.
 
 CLASS lhc_materialmre IMPLEMENTATION.
 
+  METHOD validateTsoJtso.
+
+    READ ENTITIES OF zr_mat_rme IN LOCAL MODE
+      ENTITY MaterialMRE
+        FIELDS ( IndTso )
+        WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_materialmre)
+      ENTITY MaterialMRE BY \_TsoJtso
+        FROM CORRESPONDING #( keys )
+      LINK DATA(lt_tsojtso_links).
+
+    LOOP AT lt_materialmre ASSIGNING FIELD-SYMBOL(<ls_materialmre>).
+
+      APPEND VALUE #( %tky        = <ls_materialmre>-%tky
+                      %state_area = 'VALIDATE_TSOJTSO' ) TO reported-materialmre.
+
+      IF <ls_materialmre>-IndTso IS INITIAL
+         AND line_exists( lt_tsojtso_links[ KEY id source-%tky = <ls_materialmre>-%tky ] ).
+
+        APPEND VALUE #( %tky = <ls_materialmre>-%tky ) TO failed-materialmre.
+
+        APPEND VALUE #(
+          %tky            = <ls_materialmre>-%tky
+          %state_area     = 'VALIDATE_TSOJTSO'
+          %msg            = new_message( id       = 'ZDP_MAT'
+                                        number   = '108'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-IndTso = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+
+      ENDIF.
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
+
   METHOD validateMandatoryFields.
 
     READ ENTITIES OF zr_mat_rme IN LOCAL MODE
@@ -290,54 +333,205 @@ CLASS lhc_materialmre IMPLEMENTATION.
 
     LOOP AT materiais INTO DATA(material).
 
+      DATA(lv_has_error) = abap_false.
+
       APPEND VALUE #( %tky        = material-%tky
-                      %state_area = 'VALIDATE_MANDATORY_FIELDS' ) TO reported-materialmre.
+                      %state_area = c_state_area ) TO reported-materialmre.
 
-      IF material-CodSitMat IS INITIAL OR
-         material-Dscexpen IS INITIAL OR
-         material-Dscexppt IS INITIAL OR
-         material-Emnfr IS INITIAL OR
-         material-Lifnr IS INITIAL OR
-         material-Ferth IS INITIAL OR
-         material-NumCapRme IS INITIAL OR
-         material-NumSucpRme IS INITIAL OR
-         material-NumScaoRme IS INITIAL OR
-         material-Ausme IS INITIAL OR
-         material-VlrPesCalc IS INITIAL OR
-         material-OrigemMaterial IS INITIAL OR
-         material-IndRastb IS INITIAL OR
-*         material-Matctrl IS INITIAL OR
-         material-CodOnu IS INITIAL OR
-         material-Raube IS INITIAL OR
-         material-CodGHS IS INITIAL.
-
-        APPEND VALUE #( %tky = material-%tky ) TO failed-materialmre.
-
+      IF material-CodGHS IS INITIAL.
+        lv_has_error = abap_true.
         APPEND VALUE #(
-            %tky                    = material-%tky
-            %state_area             = 'VALIDATE_MANDATORY_FIELDS'
-            %msg                    = new_message( id       = 'ZDP_MAT'
-                                                   number   = '004'
-                                                   severity = if_abap_behv_message=>severity-error )
-            %element-CodSitMat      = COND #( WHEN material-CodSitMat IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-Dscexpen       = COND #( WHEN material-Dscexpen IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-Dscexppt       = COND #( WHEN material-Dscexppt IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-Emnfr          = COND #( WHEN material-Emnfr IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-Lifnr          = COND #( WHEN material-Lifnr IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-Ferth          = COND #( WHEN material-Ferth IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-NumCapRme      = COND #( WHEN material-NumCapRme IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-NumSucpRme     = COND #( WHEN material-NumSucpRme IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-NumScaoRme     = COND #( WHEN material-NumScaoRme IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-Ausme          = COND #( WHEN material-Ausme IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-VlrPesCalc     = COND #( WHEN material-VlrPesCalc IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-OrigemMaterial = COND #( WHEN material-OrigemMaterial IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-IndRastb       = COND #( WHEN material-IndRastb IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-*            %element-Matctrl        = COND #( WHEN material-Matctrl IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-CodOnu         = COND #( WHEN material-CodOnu IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-Raube          = COND #( WHEN material-Raube IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
-            %element-CodGHS         = COND #( WHEN material-CodGHS IS INITIAL THEN if_abap_behv=>mk-on ELSE if_abap_behv=>mk-off )
+          %tky            = material-%tky
+          %state_area     = c_state_area
+          %msg            = new_message( id       = 'ZDP_MAT'
+                                        number   = '109'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-CodGHS = if_abap_behv=>mk-on
         ) TO reported-materialmre.
+      ENDIF.
 
+      IF material-Raube IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky           = material-%tky
+          %state_area    = c_state_area
+          %msg           = new_message( id       = 'ZDP_MAT'
+                                        number   = '110'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-Raube = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-CodOnu IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky            = material-%tky
+          %state_area     = c_state_area
+          %msg            = new_message( id       = 'ZDP_MAT'
+                                        number   = '111'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-CodOnu = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-IndRastb IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky              = material-%tky
+          %state_area       = c_state_area
+          %msg              = new_message( id       = 'ZDP_MAT'
+                                        number   = '112'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-IndRastb = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-OrigemMaterial IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky                    = material-%tky
+          %state_area             = c_state_area
+          %msg                    = new_message( id       = 'ZDP_MAT'
+                                        number   = '113'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-OrigemMaterial = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-VlrPesCalc IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky                = material-%tky
+          %state_area         = c_state_area
+          %msg                = new_message( id       = 'ZDP_MAT'
+                                        number   = '114'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-VlrPesCalc = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-Ausme IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky           = material-%tky
+          %state_area    = c_state_area
+          %msg           = new_message( id       = 'ZDP_MAT'
+                                        number   = '115'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-Ausme = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-NumScaoRme IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky                = material-%tky
+          %state_area         = c_state_area
+          %msg                = new_message( id       = 'ZDP_MAT'
+                                        number   = '116'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-NumScaoRme = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-NumSucpRme IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky                = material-%tky
+          %state_area         = c_state_area
+          %msg                = new_message( id       = 'ZDP_MAT'
+                                        number   = '117'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-NumSucpRme = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-NumCapRme IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky               = material-%tky
+          %state_area        = c_state_area
+          %msg               = new_message( id       = 'ZDP_MAT'
+                                        number   = '118'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-NumCapRme = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-Ferth IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky           = material-%tky
+          %state_area    = c_state_area
+          %msg           = new_message( id       = 'ZDP_MAT'
+                                        number   = '119'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-Ferth = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-Lifnr IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky           = material-%tky
+          %state_area    = c_state_area
+          %msg           = new_message( id       = 'ZDP_MAT'
+                                        number   = '120'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-Lifnr = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-Emnfr IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky           = material-%tky
+          %state_area    = c_state_area
+          %msg           = new_message( id       = 'ZDP_MAT'
+                                        number   = '121'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-Emnfr = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-Dscexppt IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky              = material-%tky
+          %state_area       = c_state_area
+          %msg              = new_message( id       = 'ZDP_MAT'
+                                        number   = '122'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-Dscexppt = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-Dscexpen IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky              = material-%tky
+          %state_area       = c_state_area
+          %msg              = new_message( id       = 'ZDP_MAT'
+                                        number   = '123'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-Dscexpen = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF material-CodSitMat IS INITIAL.
+        lv_has_error = abap_true.
+        APPEND VALUE #(
+          %tky               = material-%tky
+          %state_area        = c_state_area
+          %msg               = new_message( id       = 'ZDP_MAT'
+                                        number   = '124'
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-CodSitMat = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+
+      IF lv_has_error = abap_true.
+        APPEND VALUE #( %tky = material-%tky ) TO failed-materialmre.
       ENDIF.
 
     ENDLOOP.
@@ -364,6 +558,24 @@ CLASS lhc_materialmre IMPLEMENTATION.
     CONSTANTS c_omrme TYPE zomrme VALUE '000000'.
 
     LOOP AT entities INTO DATA(wa_entity) .
+
+      IF wa_entity-Lifnr >= c_900000.
+        APPEND VALUE #(
+          %cid      = wa_entity-%cid
+          %is_draft = wa_entity-%is_draft
+        ) TO failed-materialmre.
+
+        APPEND VALUE #(
+          %cid           = wa_entity-%cid
+          %is_draft      = wa_entity-%is_draft
+          %state_area    = 'VALIDATE_SUPPLIER_RANGE'
+          %msg           = new_message( id       = 'ZDP_MAT'
+                                        number   = 103
+                                        severity = if_abap_behv_message=>severity-error )
+          %element-Lifnr = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+        CONTINUE.
+      ENDIF.
 
       IF wa_entity-matnr IS INITIAL.
 
@@ -451,17 +663,30 @@ CLASS lhc_materialmre IMPLEMENTATION.
 
     READ ENTITIES OF zr_mat_rme IN LOCAL MODE
       ENTITY MaterialMRE
-        FIELDS ( CodSitMat Matnr )
+        FIELDS ( CodSitMat Matnr StatusCRUD )
         WITH CORRESPONDING #( keys )
       RESULT DATA(MateriaisRME).
 
     LOOP AT MateriaisRME ASSIGNING FIELD-SYMBOL(<material_rme>).
 
-      APPEND VALUE #(
-        %tky                       = <material_rme>-%tky
-        %features-%field-CodSitMat = if_abap_behv=>fc-f-unrestricted
-      ) TO result.
+      DATA(lv_is_edit) = xsdbool( <material_rme>-StatusCRUD = 'EDIT' ).
 
+      DATA(lv_required_readonly) = COND #( WHEN lv_is_edit = abap_true
+                                             THEN if_abap_behv=>fc-f-read_only
+                                             ELSE if_abap_behv=>fc-f-mandatory ).
+
+      DATA(lv_doc_ctrl) = COND #( WHEN lv_is_edit = abap_true
+                                    THEN if_abap_behv=>fc-f-read_only
+                                    ELSE if_abap_behv=>fc-f-unrestricted ).
+
+      APPEND VALUE #(
+        %tky      = <material_rme>-%tky
+        %features = VALUE #(
+                             %field = VALUE #( Lifnr   = lv_required_readonly
+                                               Docnro  = lv_doc_ctrl
+                                               Doctype = lv_doc_ctrl )
+                             )
+      ) TO result.
       IF <material_rme>-CodSitMat IS NOT INITIAL.
         IF <material_rme>-CodSitMat = 'L'.
           APPEND VALUE #(
@@ -869,6 +1094,87 @@ CLASS lhc_materialmre IMPLEMENTATION.
     ENDLOOP.
   ENDMETHOD.
 
+  METHOD validateMatklUm.
+
+    READ ENTITIES OF zr_mat_rme IN LOCAL MODE
+      ENTITY MaterialMRE
+        FIELDS ( Matkl Ausme )
+        WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_materialmre).
+
+    LOOP AT lt_materialmre ASSIGNING FIELD-SYMBOL(<ls_materialmre_matkl>).
+      APPEND VALUE #( %tky        = <ls_materialmre_matkl>-%tky
+                      %state_area = 'VALIDATE_MATKL_UM_ON_SAVE' ) TO reported-materialmre.
+      IF <ls_materialmre_matkl>-Matkl <> 'A3'
+         AND <ls_materialmre_matkl>-Ausme <> 'UN'.
+        APPEND VALUE #( %tky = <ls_materialmre_matkl>-%tky ) TO failed-materialmre.
+        APPEND VALUE #(
+          %tky           = <ls_materialmre_matkl>-%tky
+          %state_area    = 'VALIDATE_MATKL_UM_ON_SAVE'
+          %msg           = new_message( id       = 'ZDP_MAT'
+                                       number   = '125'
+                                       severity = if_abap_behv_message=>severity-error )
+          %element-Ausme = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+      ENDIF.
+    ENDLOOP.
+
+  ENDMETHOD.
+
+  METHOD validateMatControlExists.
+
+    READ ENTITIES OF zr_mat_rme IN LOCAL MODE
+    ENTITY MaterialMRE
+      FIELDS ( Matctrl )
+      WITH CORRESPONDING #( keys )
+    RESULT DATA(lt_materialmre)
+    ENTITY MaterialMRE BY \_CtrlMat
+      FROM CORRESPONDING #( keys )
+    LINK DATA(lt_mat_control_links).
+
+    LOOP AT lt_materialmre ASSIGNING FIELD-SYMBOL(<ls_materialmre>).
+
+      APPEND VALUE #( %tky        = <ls_materialmre>-%tky
+                      %state_area = 'VALIDATE_MAT_CONTROL_EXISTS' ) TO reported-materialmre.
+
+      IF <ls_materialmre>-Matctrl IS INITIAL
+         AND line_exists( lt_mat_control_links[ KEY id source-%tky = <ls_materialmre>-%tky ] ).
+
+        APPEND VALUE #( %tky = <ls_materialmre>-%tky ) TO failed-materialmre.
+
+        APPEND VALUE #(
+          %tky             = <ls_materialmre>-%tky
+          %state_area      = 'VALIDATE_MAT_CONTROL_EXISTS'
+          %msg             = new_message( id       = 'ZDP_MAT'
+                                          number   = '126'
+                                          severity = if_abap_behv_message=>severity-error )
+          %element-Matctrl = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+
+        RETURN.
+
+      ENDIF.
+
+      IF <ls_materialmre>-Matctrl IS NOT INITIAL
+         AND NOT line_exists( lt_mat_control_links[ KEY id source-%tky = <ls_materialmre>-%tky ] ).
+
+        APPEND VALUE #( %tky = <ls_materialmre>-%tky ) TO failed-materialmre.
+
+        APPEND VALUE #(
+          %tky             = <ls_materialmre>-%tky
+          %state_area      = 'VALIDATE_MAT_CONTROL_EXISTS'
+          %msg             = new_message( id       = 'ZDP_MAT'
+                                          number   = '127'
+                                          severity = if_abap_behv_message=>severity-error )
+          %element-Matctrl = if_abap_behv=>mk-on
+        ) TO reported-materialmre.
+
+      ENDIF.
+
+    ENDLOOP.
+
+  ENDMETHOD.
+
 ENDCLASS.
 
 CLASS lhc_tsojtso DEFINITION INHERITING FROM cl_abap_behavior_handler.
@@ -1105,8 +1411,8 @@ CLASS lhc_matparceiro DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS setDefaultValues FOR DETERMINE ON MODIFY
       IMPORTING keys FOR MatParceiro~setDefaultValues.
-    METHODS validatePartnerProibido FOR VALIDATE ON SAVE
-      IMPORTING keys FOR MatParceiro~validatePartnerProibido.
+    METHODS validatePartnerRange FOR VALIDATE ON SAVE
+      IMPORTING keys FOR MatParceiro~validatePartnerRange.
 
 ENDCLASS.
 
@@ -1153,7 +1459,7 @@ CLASS lhc_matparceiro IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD validatePartnerProibido.
+  METHOD validatePartnerRange.
 
     READ ENTITIES OF zr_mat_rme IN LOCAL MODE
       ENTITY MatParceiro
@@ -1166,14 +1472,14 @@ CLASS lhc_matparceiro IMPLEMENTATION.
     LOOP AT MatParceiro ASSIGNING FIELD-SYMBOL(<matparceiro>).
 
       APPEND VALUE #( %tky        = <matparceiro>-%tky
-                      %state_area = 'VALIDATE_PARTNER_PROIBIDO' ) TO reported-matparceiro.
+                      %state_area = 'VALIDATE_PARTNER_RANGE' ) TO reported-matparceiro.
 
       IF <matparceiro>-Lifnr < c_900000.
         APPEND VALUE #( %tky = <matparceiro>-%tky ) TO failed-matparceiro.
 
         APPEND VALUE #(
           %tky           = <matparceiro>-%tky
-          %state_area    = 'VALIDATE_PARTNER_PROIBIDO'
+          %state_area    = 'VALIDATE_PARTNER_RANGE'
           %msg           = new_message( id               = 'ZDP_MAT'
                                         number           = 102
                                         severity         = if_abap_behv_message=>severity-error )
@@ -1198,8 +1504,8 @@ CLASS lhc_matfornecedor DEFINITION INHERITING FROM cl_abap_behavior_handler.
 
     METHODS setDefaultValues FOR DETERMINE ON MODIFY
       IMPORTING keys FOR MatFornecedor~setDefaultValues.
-    METHODS validateSupplierProibido FOR VALIDATE ON SAVE
-      IMPORTING keys FOR MatFornecedor~validateSupplierProibido.
+    METHODS validateSupplierRange FOR VALIDATE ON SAVE
+      IMPORTING keys FOR MatFornecedor~validateSupplierRange.
     METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
       IMPORTING REQUEST requested_authorizations FOR MatFornecedor RESULT result.
 
@@ -1248,7 +1554,7 @@ CLASS lhc_matfornecedor IMPLEMENTATION.
 
   ENDMETHOD.
 
-  METHOD validateSupplierProibido.
+  METHOD validateSupplierRange.
 
     READ ENTITIES OF zr_mat_rme IN LOCAL MODE
        ENTITY MatFornecedor
@@ -1261,14 +1567,14 @@ CLASS lhc_matfornecedor IMPLEMENTATION.
     LOOP AT MatFornecedor ASSIGNING FIELD-SYMBOL(<matfornecedor>).
 
       APPEND VALUE #( %tky        = <matfornecedor>-%tky
-                      %state_area = 'VALIDATE_SUPPLIER_PROIBIDO' ) TO reported-matfornecedor.
+                      %state_area = 'VALIDATE_SUPPLIER_RANGE' ) TO reported-matfornecedor.
 
       IF <matfornecedor>-Lifnr >= c_900000.
         APPEND VALUE #( %tky = <matfornecedor>-%tky ) TO failed-matfornecedor.
 
         APPEND VALUE #(
           %tky           = <matfornecedor>-%tky
-          %state_area    = 'VALIDATE_SUPPLIER_PROIBIDO'
+          %state_area    = 'VALIDATE_SUPPLIER_RANGE'
           %msg           = new_message( id               = 'ZDP_MAT'
                                         number           = 103
                                         severity         = if_abap_behv_message=>severity-error )
@@ -1315,7 +1621,6 @@ CLASS lhc_matkit IMPLEMENTATION.
     LOOP AT lt_matkit ASSIGNING FIELD-SYMBOL(<ls_matkit>).
 
       IF <ls_matkit>-Matnrkit IS NOT INITIAL.
-        " Seleciona Material pelo cod Fabricante
         SELECT SINGLE FROM i_product
             FIELDS product
             WHERE ProductManufacturerNumber = @<ls_matkit>-Matnrkit

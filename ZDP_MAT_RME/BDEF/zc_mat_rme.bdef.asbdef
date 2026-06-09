@@ -18,7 +18,8 @@ use etag
   use action Discard;
   use action Resume;
   use action Prepare;
-  use action triggerMaterialProibidoRoot;
+//  use action validateSupplierOnChange;
+  use action triggerItems;
 
   use association _TsoJtso { create; with draft; }
   use association _MatCas { create; with draft; }

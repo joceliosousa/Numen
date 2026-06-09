@@ -13,8 +13,9 @@ early numbering
 {
   field ( mandatory : create, readonly : update )
   CodProjAenv,
-  Mfrpn,
-  Lifnr;
+  Mfrpn;
+
+  field ( features : instance ) Lifnr, Doctype, Docnro;
 
   field ( mandatory )
   CodSitMat,
@@ -70,23 +71,26 @@ early numbering
   draft action Resume;
   draft determine action Prepare
   {
-    validation ( always ) MatCAS~validateMaterialProibido;
-    validation ( always ) MatParceiro~validatePartnerProibido;
-    validation ( always ) MatFornecedor~validateSupplierProibido;
+//    validation ( always ) MatCAS~validateMaterialProibido;
+//    validation ( always ) MatParceiro~validatePartnerRange;
   }
 
   validation validateMandatoryFields on save { create; update; }
 
+
+  validation validateTsoJtsoExists on save { field IndTso; }
+  validation validateMatControlExists on save { field Matctrl; }
+  validation validateMatklUm on save { field Matkl, Ausme; }
   determination detAlteraCriticidade on modify { field CodSitMat; }
   determination detUnidadeMedida on modify { field Ausme; }
   determination setDefaultValues on modify { create; }
   determination detGrupoEmbalagem on modify { field CodOnu; }
   determination setControlFields on save { create; }
 
-  determine action triggerMaterialProibidoRoot
+  determine action triggerItems
   {
     validation MatCAS~validateMaterialProibido;
-    validation MatFornecedor~validateSupplierProibido;
+    validation MatFornecedor~validateSupplierRange;
   }
 
   side effects
@@ -94,7 +98,7 @@ early numbering
     field CodSitMat affects field SitMatCriticality;
     field Ausme affects field Meins;
     field CodOnu affects field GrpEmb, field ClasseRisco;
-    determine action triggerMaterialProibidoRoot
+    determine action triggerItems
       executed on entity _MatCas,
                   entity _MatFornecedor
       affects messages;
@@ -356,11 +360,11 @@ early numbering
   field ( readonly ) Userincl, Useralt, Dataincl, Horaincl, Dataalt, Horaalt, Status;
 
   determination setDefaultValues on modify { create; }
-  validation validateSupplierProibido on save { field Lifnr; }
+  validation validateSupplierRange on save { field Lifnr; }
 
   determine action validateSupplierOnChange
   {
-    validation validateSupplierProibido;
+    validation validateSupplierRange;
   }
 
   side effects
@@ -412,7 +416,7 @@ early numbering
   field ( readonly ) Userincl, Useralt, Dataincl, Horaincl, Dataalt, Horaalt, Status;
 
   determination setDefaultValues on modify { create; }
-  validation validatePartnerProibido on save { field Lifnr; }
+  validation validatePartnerRange on save { field Lifnr; }
 
   mapping for ztdp_matrmeforma
     {
